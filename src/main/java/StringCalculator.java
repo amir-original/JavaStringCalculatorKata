@@ -4,42 +4,60 @@ import java.util.regex.Pattern;
 public class StringCalculator {
 
     private static final int NEGATIVE_EXCEPTION_ERROR = -1;
+    private static final int EMPTY_STRING = 0;
 
     public int add(String str){
-            if (str.isEmpty()){
-                return 0;
-            }
-        String[] numbers = str.split("[,\n;]");
-        String customSeparatorsPattern = "//(?<separator>.*)\n(?<numbers>.*)";
-        Pattern csp = Pattern.compile(customSeparatorsPattern);
-        Matcher customSeparators = csp.matcher(str);
-
+        if (str.isEmpty()) return EMPTY_STRING;
+        String[] numbers = defaultSeparator(str);
+        Matcher customSeparators = getCustomSeparators(str);
         if (customSeparators.find()){
             String splitBy = customSeparators.group("separator");
-            String multipleSeparatorsPattern = "//\\[(?<delim1>.*)\\]\\[(?<delim2>.*)\\]\n";
-            Pattern msp = Pattern.compile(multipleSeparatorsPattern);
-            Matcher multipleSeparators = msp.matcher(str);
+            Matcher multipleSeparators = getMultipleSeparators(str);
             if (multipleSeparators.find()){
-                splitBy = impldeMultipleSeparator(multipleSeparators, "|");
+                splitBy = implode(multipleSeparators, "|");
             }
-            splitBy = scapeSpcialCharacters(splitBy);
+            splitBy = scapeSpecialCharacters(splitBy);
             numbers = customSeparators.group("numbers").split(splitBy);
         }
-
-        int result = 0;
-         for (int index = 0; index < numbers.length;index++){
-             int num =Integer.parseInt(numbers[index]);
-             if (isNegativeNumber(num)){
-                 result = NEGATIVE_EXCEPTION_ERROR;
-             }else if (!isNumberBiggerThan1000(num)){
-                 result += num;
-             }
-
-         }
-         return result;
+        return sum(numbers);
     }
 
-    private String impldeMultipleSeparator(Matcher multipleSeparators, String by) {
+
+    private int sum(String[] numbers) {
+        int result = 0;
+        for (int index = 0; index < numbers.length; index++){
+            int num = convertToInteger(numbers[index]);
+            if (isNegativeNumber(num)){
+                result = NEGATIVE_EXCEPTION_ERROR;
+            }else if (!isNumberBiggerThan1000(num)){
+                result += num;
+            }
+        }
+        return result;
+    }
+
+    private String[] defaultSeparator(String str) {
+        return str.split("[,\n;*+]");
+    }
+
+    private Matcher getMultipleSeparators(String str) {
+        String multipleSeparatorsPattern = "//\\[(?<delim1>.*)\\]\\[(?<delim2>.*)\\]\n";
+        Pattern msp = Pattern.compile(multipleSeparatorsPattern);
+        Matcher multipleSeparators = msp.matcher(str);
+        return multipleSeparators;
+    }
+
+    private Matcher getCustomSeparators(String str) {
+        String customSeparatorsPattern = "//(?<separator>.*)\n(?<numbers>.*)";
+        Pattern csp = Pattern.compile(customSeparatorsPattern);
+        return csp.matcher(str);
+    }
+
+    private int convertToInteger(String number) {
+        return Integer.parseInt(number);
+    }
+
+    private String implode(Matcher multipleSeparators, String by) {
         return multipleSeparators.group("delim1")+ by + multipleSeparators.group("delim2");
     }
 
@@ -51,7 +69,7 @@ public class StringCalculator {
         return num < 0;
     }
 
-    private String scapeSpcialCharacters(String splitBy) {
+    private String scapeSpecialCharacters(String splitBy) {
         splitBy = splitBy.replaceAll("\\[|\\]","");
         splitBy = splitBy.replaceAll("[*]","[*]");
         splitBy = splitBy.replaceAll("[+]","[+]");

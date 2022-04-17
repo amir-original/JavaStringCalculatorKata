@@ -253,6 +253,16 @@ public class StringCalculatorTest {
         Assertions.assertEquals(46,result);
     }
 
+    @Test
+    void should_return_10_and_Scape_Special_single_Separator() {
+        StringCalculator calculator = new StringCalculator();
+
+        int result = calculator.add("4*2*2*2");
+        int result2 = calculator.add("4+2+2+2");
+
+        Assertions.assertEquals(10,result);
+        Assertions.assertEquals(10,result2);
+    }
 
 
 }
