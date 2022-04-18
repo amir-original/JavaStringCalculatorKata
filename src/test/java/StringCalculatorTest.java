@@ -259,10 +259,10 @@ public class StringCalculatorTest {
 
         int result = calculator.add("4*2*2*2");
         int result2 = calculator.add("4+2+2+2");
-
+        int add1 = calculator.add("//[1_€#@546]\n11_€#@54621_€#@5463");
+        Assertions.assertEquals(6, add1);
         Assertions.assertEquals(10,result);
         Assertions.assertEquals(10,result2);
     }
-
 
 }
