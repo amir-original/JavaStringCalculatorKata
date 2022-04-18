@@ -168,9 +168,14 @@ public class StringCalculatorTest {
         StringCalculator calculator = new StringCalculator();
 
         int result = calculator.add("1,-2,-3");
+        int result2 = calculator.add("-1,2,-3");
+        int result3 = calculator.add("-1,-2,3");
         Assertions.assertEquals(-1,result);
+        Assertions.assertEquals(-1,result2);
+        Assertions.assertEquals(-1,result3);
 
     }
+
 
     @Test
     void should_return_2_and_ignore_numbers_bigger_than_1000() {

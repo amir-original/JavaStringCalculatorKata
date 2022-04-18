@@ -3,7 +3,7 @@ import java.util.regex.Pattern;
 
 public class StringCalculator {
 
-    private static final int NEGATIVE_EXCEPTION_ERROR = -1;
+    private static final int NEGATIVE_NUMBER_ERROR = -1;
     private static final int EMPTY_STRING = 0;
 
     public int add(String str){
@@ -24,16 +24,16 @@ public class StringCalculator {
 
 
     private int sum(String[] numbers) {
-        int result = 0;
+        int sum = 0;
         for (int index = 0; index < numbers.length; index++){
             int num = convertToInteger(numbers[index]);
             if (isNegativeNumber(num)){
-                result = NEGATIVE_EXCEPTION_ERROR;
+                return NEGATIVE_NUMBER_ERROR;
             }else if (!isNumberBiggerThan1000(num)){
-                result += num;
+                sum += num;
             }
         }
-        return result;
+        return sum;
     }
 
     private String[] defaultSeparator(String str) {
